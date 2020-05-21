@@ -82,7 +82,7 @@
       var theRow = this.get(rowIndex);
       var peicesInRow = 0;
       for(var i = 0; i < theRow.length; i++){
-        if(theRow[i] === 1){
+        if(theRow[i] ===1){
           peicesInRow += 1;
         };
       };
@@ -99,19 +99,9 @@
       let numberOfRows = this.attributes.n;
       for(let i = 0; i < numberOfRows; i++){
 
-        let peicesInRow = 0;
-        var theRow = this.get(i);
-
-        for(let j = 0; j < theRow.length; j++){
-          if(theRow[j] === 1){
-            peicesInRow += 1;
-          };
+        if(this.hasRowConflictAt(i)){
+          return true;
         }
-
-        if(peicesInRow >= 2){
-          return true
-        }
-
       }
 
       return false;
@@ -124,11 +114,38 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      let numberOfRows = this.attributes.n;
+      let peicesInCol = 0;
+
+      for(let i = 0; i < numberOfRows; i++ ){
+        let theRow = this.get(i);
+        //collumn one*
+        if(theRow[colIndex] === 1){
+          peicesInCol += 1;
+        }
+
+        if(peicesInCol === 2){
+          return true;
+        }
+
+      }
+
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      let numberOfRows = this.attributes.n;
+      let numOfCol = this.attributes.n;
+      //debugger;
+      //loops through each collum number
+      for(let i = 0; i < numOfCol; i++){
+        //loops through each row at same collumn number
+        if(this.hasColConflictAt(i)){
+
+          return true;
+        };
+      }
       return false; // fixme
     },
 
@@ -138,13 +155,70 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+    hasMajorDiagonalConflictAt: function(majorD) {
+    let n = this.attributes.n;
+    //a variable to track pieces found
+    let foundPeices = 0;
+    // a variable to track how many squares to check => boardsize - |major d|
+    let checksNeeded = n - Math.abs(majorD);
+    // a variabl that tells us which spot to start on
+    let startCol;
+    let startRow;
+      //if major-d is positive we start at (0,major-d)
+      if(majorD >= 0){
+        startCol = majorD;
+        startRow = 0;
+      }else{
+        //else if major-d is negative we start at (|major-d|, 0)
+        startCol = 0;
+        startRow = Math.abs(majorD);
+      }
+    //while spots checked < boardsize - |major d|             md = -1  SP = (1, 0) -> (2, 1)
+      for(let i = 0; i < checksNeeded; i++){
+        if(this.get(startRow)[startCol] === 1){
+          foundPeices += 1;
+        }
+        startRow +=1;
+        startCol +=1;
+
+        if(foundPeices === 2){
+          return true;
+        }
+      }
+
+      //check the spot we started on (1 move)
+      //incremenet our counter
+      //increment arr index + 1
+      //incremement our collumn index + 1
+
+
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+
+      //find this.attributes.n
+      var n = this.attributes.n;
+      let checksNeeded = [];
+      //create an array of all the points where we need to check for major conflicts
+      //========figure this out=========
+      //need t push from n-1 -> -n+1 to an array
+      for(let i = -n + 1; i < n; i++){
+        checksNeeded.push(i);
+      }
+      //iterate through the array
+      for (var i = 0; i < checksNeeded.length; i++) {
+        //call the check on each value of the array
+        if (this.hasMajorDiagonalConflictAt(checksNeeded[i])) {
+          //if true, return true;
+          return true;
+        }
+      }
+      //end iteration and return false
+      return false;
+
+
     },
 
 
@@ -154,12 +228,59 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      //create a variable for n
+      var n = this.attributes.n
+      //create a variable for row = 0
+      var row = 0;
+      //create a variable for col (argument)
+      var col = minorDiagonalColumnIndexAtFirstRow;
+      //create pieces variable
+      var pieces = 0;
+      // debugger;
+      //iterate until n times
+      for (var i = 0; i < n; i++) {
+        //if col < n
+        if (col < n) {
+          //check if value is 1
+          if (this.get(row)[col] === 1) {
+            //if it is, increment our pieces count
+            pieces ++;
+          }
+        }
+        //decrement col
+        col--;
+        //increment row
+        row++;
+        //if pieces > 1
+        if (pieces > 1) {
+          //return true
+          return true;
+        }
+      }
+
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      //find this.attributes.n
+      var n = this.attributes.n;
+      let checksNeeded = [];
+      //create an array of all the points where we need to check for major conflicts
+      //need t push from n-1 -> -n+1 to an array
+      for (var i = 0; i < (n * 2) - 2; i++) {
+        checksNeeded.push(i);
+      }
+      //iterate through the array
+      for (var i = 0; i < checksNeeded.length; i++) {
+        //call the check on each value of the array
+        if (this.hasMinorDiagonalConflictAt(checksNeeded[i])) {
+          //if true, return true;
+          return true;
+        }
+      }
+      //end iteration and return false
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
