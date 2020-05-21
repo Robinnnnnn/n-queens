@@ -297,3 +297,13 @@
   };
 
 }());
+
+//Time Complexity
+// hasRowConflictAt -- Linear
+// hasAnyRowConflicts -- Quadratic
+// hasColConflictAt -- Linear
+// hasAnyColConflicts -- Quadratic
+// hasMajorDiagonalConflictAt -- Linear
+// hasAnyMajorDiagonalConflicts -- Quadratic
+// hasMinorDiagonalConflictAt - Linear
+// hasAnyMinorDiagonalConflicts -- Quadratice

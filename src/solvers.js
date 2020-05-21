@@ -107,3 +107,11 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+
+// Time Complexity
+// solutionFinder  -- Linear Time
+// findNRooksSolution -- Quadratic
+// countNRooksSolutions -- Linear
+// findNQueensSolution -- Quadratic
+// countNQueensSolutions -- Quadratic
